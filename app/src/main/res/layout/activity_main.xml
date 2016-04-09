@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="#8cc0f7"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name："
+            android:textColor="#a444bf" />
+
+        <TextView
+            android:id="@+id/tv_device_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="NULL"
+            android:textColor="#fa05a0" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Address："
+            android:textColor="#a444bf" />
+
+        <TextView
+            android:id="@+id/tv_device_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:text="NULL"
+            android:textColor="#fa05a0" />
+    </LinearLayout>
+
+    <TableLayout
+
+        android:id="@+id/TableLayout01"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_margin="5px">
+
+        <EditText
+            android:id="@+id/et_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:textSize="20sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/button_s_n_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_bg"
+                android:onClick="onSendSNTimeButtonClicked"
+                android:text="@string/set_s_n_time" />
+
+            <Button
+                android:id="@+id/button_e_w_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_weight="1"
+                android:background="@drawable/button_bg"
+                android:onClick="onSendEWTimeButtonClicked"
+                android:text="@string/set_e_w_time" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/button_quit_stop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="5dp"
+            android:drawableLeft="@android:drawable/ic_delete"
+            android:gravity="left|center_vertical"
+            android:onClick="onSendQuitStopButtonClicked"
+            android:paddingLeft="120dp"
+            android:text="关闭禁停"
+            android:textSize="24sp"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/button_enter_stop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/button_bg"
+            android:drawableLeft="@android:drawable/checkbox_on_background"
+            android:gravity="left|center_vertical"
+            android:onClick="onSendEnterStopButtonClicked"
+            android:paddingLeft="130dp"
+            android:text="开启禁停"
+            android:textSize="24sp" />
+
+        <Button
+            android:id="@+id/button_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="80dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/button_bg2"
+            android:drawableLeft="@android:drawable/checkbox_on_background"
+            android:gravity="left|center_vertical"
+            android:onClick="onSendOKSysButtonClicked"
+            android:paddingLeft="120dp"
+            android:text="开启系统"
+            android:textSize="30sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/boder"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:text="闯红灯:"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/tv_run_red_light"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.77"
+                android:hint="无闯红灯记录      "
+                android:textColor="#ff0004"
+                android:textColorHint="#ff0004"
+                android:textSize="24sp" />
+
+            <ImageView
+                android:id="@+id/iv_run_red_light"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="5dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/greenlight" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/boder"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/total_nums"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="统计次数：" />
+
+            <TextView
+                android:id="@+id/cycle_nums"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:hint="0次"
+                android:textColor="#8cc0f7" />
+
+            <TextView
+                android:id="@+id/total_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="红绿灯时间：" />
+
+            <TextView
+                android:id="@+id/cycle_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:hint="0S"
+                android:textColor="#8cc0f7" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/boder"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/sou_nor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="南北车流量:" />
+
+            <TextView
+                android:id="@+id/sou_nor_nums"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:hint="0辆"
+                android:textColor="#8cc0f7" />
+
+            <TextView
+                android:id="@+id/eas_wes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="东西车流量：" />
+
+            <TextView
+                android:id="@+id/eas_wes_nums"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:hint="0辆"
+                android:textColor="#8cc0f7" />
+        </LinearLayout>
+    </TableLayout>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="5dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
+            android:background="@drawable/boder2">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="\n\n获\n取\n数\n据\n \n \n\n\n" />
+        </LinearLayout>
+
+        <ScrollView
+            android:id="@+id/svResult"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginRight="3dp"
+                android:background="@drawable/boder2"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/mDataFiled"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="data filed\n" />
+            </LinearLayout>
+        </ScrollView>
+    </TableRow>
+
+</LinearLayout>
