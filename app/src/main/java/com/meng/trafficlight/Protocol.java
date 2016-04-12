@@ -18,19 +18,12 @@ public class Protocol {
     public static byte[] dataCycleNums = new byte[8];
     public static byte[] dataCycleTime = new byte[8];
     public static boolean RESETMARK = false;
-    private static int currentLength = 0;
 //    private static int revLength = 0;
+public static boolean lower_send_flag = false;
+    private static int currentLength = 0;
 
     static {
-        byte[] initData = new byte[8];
-        for (int i = 0; i < 8; i++) {
-            initData[i] = '@';
-        }
-        srcDataToOtherData(initData, dataRunRedLight, 8);
-        srcDataToOtherData(initData, dataSouNorNums, 8);
-        srcDataToOtherData(initData, dataEasWesNums, 8);
-        srcDataToOtherData(initData, dataCycleNums, 8);
-        srcDataToOtherData(initData, dataCycleTime, 8);
+        clearData();
     }
 
     public static int processDataIn(byte[] dataBytes, int length) {
@@ -78,13 +71,16 @@ public class Protocol {
                 switch (dataRev[2]) {
                     case '0'://start system
                         RESETMARK = false;
+                        lower_send_flag = true;//表示是由下位机开启系统
                         BTClient.systemOk = true;
                         break;
                     case '1'://set time
                         break;
                     case '2'://enter stop
+                        BTClient.enter_stop = true;
                         break;
                     case '3'://quit stop
+                        BTClient.enter_stop = false;
                         break;
                     case '4'://run red light
                         srcDataToOtherData(dataRev, dataRunRedLight, 8);
@@ -122,6 +118,17 @@ public class Protocol {
         return 0;
     }
 
+    public static void clearData() {
+        byte[] initData = new byte[8];
+        for (int i = 0; i < 8; i++) {
+            initData[i] = '@';
+        }
+        srcDataToOtherData(initData, dataRunRedLight, 8);
+        srcDataToOtherData(initData, dataSouNorNums, 8);
+        srcDataToOtherData(initData, dataEasWesNums, 8);
+        srcDataToOtherData(initData, dataCycleNums, 8);
+        srcDataToOtherData(initData, dataCycleTime, 8);
+    }
     private static void clearDataRev() {
         for (int i = 0; i < 8; i++) {
             dataRev[i] = '@';

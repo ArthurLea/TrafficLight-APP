@@ -39,16 +39,15 @@ public class BTClient extends Activity {
     private final static int REQUEST_CONNECT_DEVICE = 1; // 宏定义查询设备句柄
     //BLE模块本身传输速率有限，尽量减少数据发送量
     private final static int WRITE_DATA_PERIOD = 40;//update period，跟新数据周期，40*10ms
-    public static boolean systemOk = false;
-    private static boolean startConnect = false;
-    Handler timeHandler = new Handler();    //定时器周期，用于跟新数据等
+    public static boolean systemOk = false;//系统启动标志
+    public static boolean enter_stop = false;//系统禁停标志
+    private static boolean startConnect = false;//android端开始连接标志
+    Handler timeHandler = new Handler(); //定时器周期，用于跟新数据等;
     Runnable runnable = new Runnable() {
         @Override
         public void run() {
             try {
-                timeHandler.postDelayed(this, WRITE_DATA_PERIOD);
-                //updateLogData();
-
+//                timeHandler.postDelayed(this, WRITE_DATA_PERIOD);
             } catch (Exception e) {
             }
         }
@@ -125,9 +124,10 @@ public class BTClient extends Activity {
                     Log.i(TAG, "RX Data:" + stringBuilder);
 
                     //显示下位机接收的数据
-                    if (mDataField.length() > 500)
+
+                    if ((mDataField.length() > 500) || mDataField.getText().equals("the lower has already reseted!"))
                         mDataField.setText("");
-                    mDataField.append(new String(dataBytes));
+                    mDataField.append(new String(dataBytes));//能够缩放显示
                     svResult.post(new Runnable() {
                         @Override
                         public void run() {
@@ -136,9 +136,10 @@ public class BTClient extends Activity {
                     });
                 }
 
-                //解析得到的数据，获得MSP命令编号
+                //解析得到的数据，获得命令编号
                 reCmd = Protocol.processDataIn(dataBytes, dataBytes.length);
                 updateLogData();//update the UI TextView data
+                updateUI(mConnected);
             }
         }
     };
@@ -246,6 +247,23 @@ public class BTClient extends Activity {
             eas_wes_nums.setText("0辆");
             cycle_nums.setText("0次");
             cycle_time.setText("0S");
+            this.mDataField.setText("the lower has already reseted!");
+            Protocol.RESETMARK = false;
+            Protocol.clearData();//清空所有寄存器数据
+        }
+        //更新开始禁停按钮
+        if (enter_stop)//已经开启禁停
+        {
+            button_enter_stop.setVisibility(View.GONE);
+            button_quit_stop.setVisibility(View.VISIBLE);
+        } else//关闭禁停
+        {
+            button_enter_stop.setVisibility(View.VISIBLE);
+            button_quit_stop.setVisibility(View.GONE);
+        }
+        if (Protocol.lower_send_flag) {
+            Toast.makeText(this, "系统已启动!", Toast.LENGTH_SHORT).show();
+            Protocol.lower_send_flag = false;
         }
     }
 
@@ -430,11 +448,13 @@ public class BTClient extends Activity {
         String data = "000";
         if (mConnected) {
             if (systemOk) {
-                String command = "$82" + data + "0F";
-                btSendBytes(command.getBytes());
-                button_enter_stop.setVisibility(View.GONE);
-                button_quit_stop.setVisibility(View.VISIBLE);
-                systemOk = false;
+                if (!enter_stop) {//没有开启禁停
+                    String command = "$82" + data + "0F";
+                    btSendBytes(command.getBytes());
+                    button_enter_stop.setVisibility(View.GONE);
+                    button_quit_stop.setVisibility(View.VISIBLE);
+                    enter_stop = true;
+                }
             } else {
                 Toast.makeText(this, "系统尚未启动！", Toast.LENGTH_SHORT).show();
             }
@@ -447,12 +467,14 @@ public class BTClient extends Activity {
     public void onSendQuitStopButtonClicked(View v) {
         String data = "000";
         if (mConnected) {
-            if (!systemOk) {
-                String command = "$83" + data + "0F";
-                btSendBytes(command.getBytes());
-                button_enter_stop.setVisibility(View.VISIBLE);
-                button_quit_stop.setVisibility(View.GONE);
-                systemOk = true;
+            if (systemOk) {
+                if (enter_stop) {//已经禁停
+                    String command = "$83" + data + "0F";
+                    btSendBytes(command.getBytes());
+                    button_enter_stop.setVisibility(View.VISIBLE);
+                    button_quit_stop.setVisibility(View.GONE);
+                    enter_stop = false;
+                }
             } else {
                 Toast.makeText(this, "系统尚未启动！", Toast.LENGTH_SHORT).show();
             }
@@ -467,11 +489,15 @@ public class BTClient extends Activity {
         String disconnectToast = getResources().getString(R.string.DisconnectToast);
 
         if (mConnected) {
-            String command = "$80" + data + "0F";
-            btSendBytes(command.getBytes());
-            button_enter_stop.setVisibility(View.VISIBLE);
-            button_quit_stop.setVisibility(View.GONE);
-            systemOk = true;
+            if (systemOk) {
+                Toast.makeText(this, "系统已经启动！", Toast.LENGTH_SHORT).show();
+            } else {
+                String command = "$80" + data + "0F";
+                btSendBytes(command.getBytes());
+                button_enter_stop.setVisibility(View.VISIBLE);
+                button_quit_stop.setVisibility(View.GONE);
+                systemOk = true;
+            }
         } else {
             Toast.makeText(this, disconnectToast, Toast.LENGTH_SHORT).show();
         }
